@@ -1,0 +1,588 @@
+\documentclass[12pt,letterpaper,english]{article}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\IfFileExists{url.sty}{\usepackage{url}}
+                      {\newcommand{\url}{\texttt}}
+
+\usepackage{babel}
+%%\usepackage{noweb}
+\usepackage{Rd}
+
+\usepackage{Sweave}
+\SweaveOpts{engine=R,eps=FALSE}
+%\VignetteIndexEntry{quantmod Charts Reference}
+%\VignetteDepends{quantmod}
+%\VignetteKeywords{technical analysis, strategy, candlesticks}
+%\VignettePackage{quantmod}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%% End Setup Lines 
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\author {Joshua Ulrich \& ChuuHsiang Hung}
+
+\title{\pkg{quantmod} Charts Overview}
+% \plaintitle{quantmod Charts Overview}
+
+% \keywords{technical analysis, strategy, candlesticks}
+
+
+
+
+\makeatletter
+\makeatother
+\maketitle
+
+\begin{abstract}
+  This vignette introduces the major update of \pkg{quantmod} for the 
+  GSoC "plot.xts for Performance and Risk" project. 
+  It gives a brief overview of the graphics and display wrapper
+  functionality contained in quantmod including most of the charts.  
+  We develop the examples using randomly generated OHLCV data from \pkg{TTR}.
+  Since S4 method for chartSeries has been deprecated, we will introduce 
+  the structure of new plot object and the relevant functions.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\code{\link{quantmod}} is a library of functions designed for charting 
+OHLC data and adding technical indicator functions in \pkg{TTR} to 
+the chart. As of the developed version 0.4-7, we rewrite chartSeries and 
+its relevant functions based on plot.xts in Joshua's \pkg{xts}, 
+developed version 0.10-0, to improve graphing primitives and convenience 
+for in data exploration. New code is backwards compatible with interfaces 
+of other functions in the corresponding packages such as \pkg{blotter} and 
+\pkg{quantstrat}.
+
+This vignette provides a demonstration of some of the capabilities of 
+\code{\link{quantmod}}. We focus on the charting functionality but comment 
+on the new structure along the way. These examples are not intended 
+to be complete, but they should provide an indication of how to use the
+new chartSeries and create custom addTA functions. 
+
+\section{Set up quantmod}
+
+These examples assume the reader has basic knowledge of \R ~and
+understands how to install \R, read and manipulate data, and create
+basic calculations. For further assistance, please see 
+\code{\link{http://cran.r-project.org/doc/manuals/R-intro.pdf}}
+and other available materials at \code{\link{http://cran.r-project.org}}.
+This section will begin with installation, discuss the example data
+set, and provide an overview of charts attributes that will be used
+in the examples that follow.
+
+
+\subsection{Install quantmod}
+
+As of developed version 0.4-7 for GSoC project, quantmod 
+is only available via GitHub, and the dependent xts with version 0.10-0 
+is needed to replicate the examples that follow.  
+\R~ users with connectivity need to install the latest \code{devtools} 
+to install package from GitHub. Users can visit 
+\code{\link{https://github.com/hadley/devtools}} to get more information. 
+After it is installed, you can simply type:
+<<eval=FALSE, echo=TRUE>>=
+install_github('naturalsmen/quantmod', ref = 'design')
+install_github('joshuaulrich/xts') # install developed version of xts
+@
+A number of packages are required, including \code{xts}, \code{zoo}, 
+\code{TTR} and the suggested packages \code{DBI}, \code{RMySQL}, 
+\code{RSQLite},\code{timeSeries}, \code{its}, \code{XML} and 
+\code{downloader}. After installing \code{\link{quantmod}},
+load it into your active \R~ session using \code{library("quantmod")}.
+
+<<LoadLibrary,echo=T,results=hide>>=
+library('quantmod')
+@
+
+\subsection{Load and review data}
+
+%
+\begin{figure}
+
+\caption{First Lines of the ttrc }
+
+\label{fig:First-Lines-of}
+
+<<LoadData,echo=T>>=
+data(ttrc, package="TTR")
+head(ttrc)
+ttrc <- xts(ttrc[,-1], ttrc[,1])
+class(ttrc)
+ttrc <- ttrc["1997::2001"]
+@
+\end{figure}
+
+
+First we load the data used in all of the examples that follow. As
+you can see in Figure \ref{fig:First-Lines-of}, \code{ttrc}
+is a xts object that contains columns of Open, High, Low, Close and Volume 
+starting January 2, 1985 to December 31, 2006. Since there are 5550 
+observations in \code{ttrc}, we only select period from 1997 to 2001 
+with about 1000 observations.
+
+\section{Create Charts}
+Since the appearance of charts are the same as the previous 
+version, We will focus on introducing the new structure of 
+chartSeries and the relevant functions with charts.
+
+\subsection{Create financial charts}
+
+candlesticks chart has been a main feature in quantmod. \code{chartSeries}
+is a charting tool designed for creating standard financial 
+charts for xts-based object and can integrate with addTA functions to 
+implement technical analysis. Possible chart styles include candles, 
+matches (1 pixel candles), bars, and lines. In this chapter we introduce 
+the charting functionality of \code{chartSeries} by different chart 
+styles and subset period. We will use candlesticks chart for the examples 
+in the later chapter.
+
+
+\subsubsection*{candlesticks}
+
+%
+\begin{figure}
+
+\caption{Example of Candlesticks }
+
+\label{fig:example-of-candlesticks}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(x=ttrc, type='candlesticks', theme=chartTheme('black'))
+class(cs)
+names(cs)
+cs
+@
+\end{figure}
+
+In Figure \ref{fig:example-of-candlesticks}, we create a plot 
+object \code{cs}. As you can see, \code{cs} is an 
+environment  which is different from the original S4 objects, 
+\code{chob} and \code{chobTA} that have been deprecated. Users 
+can get the names of \code{cs} to see functions used to manage 
+the plot object. Then we can see the candlesticks chart
+with theme 'black'. For 'candlesticks' and 'matchsticks', data 
+need to be OHLC or OHLCV based xts object to create chart. The 
+type of 'matchsticks creates 1 pixel candles. In default, 'green' 
+and 'red' colors of the candlesticks represent price rising 
+and price decreasing respectively. Users can manage the chart 
+colors by calling \code{chartTheme}. We will introduce it in the 
+later chapter. 
+
+\subsubsection*{matchsticks}
+
+%
+\begin{figure}
+
+\caption{Example of Matchsticks }
+
+\label{fig:example-of-matchsticks}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(x=ttrc, type='matchsticks', theme=chartTheme('black'))
+cs
+@
+\end{figure}
+
+When series is greater than 300 days, the border color will block the color
+of price movement thus making chart unreadable. Users can set type to 
+'matchsticks' to draw 1 pixel candlesticks to avoid this issue or use 
+the default setting. As you can see in Figure \ref{fig:example-of-matchsticks}, 
+the price movement is more readable with 1 pixel candlesticks for large series.
+
+\subsubsection*{subset}
+
+%
+\begin{figure}
+
+\caption{Example of Subset Series }
+
+\label{fig:example-of-subset-series}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(x=ttrc, subset="1998-06::1999-01")
+cs
+@
+\end{figure}
+
+Users are allowed to enlarge a certain period by specifying
+\code{subset} with insterested date. The date needs to be 
+given in specific format. For an entire year or month, you
+can simply specify "yyyy" and "yyyy-mm". 1-day subset is not
+allowed here. As of the period that across the years or months, 
+you can use "::" or "/" to separate two periods: "yyyy::yyyy" 
+or "yyyy/yyyy". In Figure \ref{fig:example-of-subset-series}, 
+we subset the period from June 1998 to January 1999 where 
+two sudden drops in price occur. Users can also call 
+\code{zoomChart} or \code{zooom} to view the subset series. 
+We will introduce them in the later chapter
+
+\subsubsection*{multi.col}
+
+%
+\begin{figure}
+
+\caption{Example of 4 Color Candle Pattern }
+
+\label{fig:example-of-4-color-candle-pattern}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(x=ttrc, subset="1998-06::1999-01", multi.col=TRUE)
+cs
+@
+\end{figure}
+
+As showed in Figure \ref{fig:example-of-4-color-candle-pattern}. 
+\code{chartSeries} also supports 4 color candle pattern to provide 
+further time-series data exploration. It implements a color coding 
+scheme with grey, white, red and black colors. users can type 
+\code{help(chartSeries)} to get more information about the rules.
+
+%
+\begin{figure}
+
+\caption{Example of Moving Averages }
+
+\label{fig:example-of-moving-averages}
+
+<<echo=T, fig=T, height=5>>=
+cs <- addSMA(n=10)
+cs
+@
+\end{figure}
+
+%
+\begin{figure}
+
+\caption{Example of Multiple Periods}
+
+\label{fig:example-of-multi-periods}
+
+<<echo=T, fig=T, height=5>>=
+cs <- addSMA(n=10:15)
+cs
+@
+\end{figure}
+
+To analyze the movement of the series, users can call 
+addTA functions such as \code{addSMA}, \code{addRSI}, 
+\code{addMACD}, etc., to add technical indicators to 
+the chart. Those functions will first calculate the 
+technical indicators from \pkg{TTR} and add the result 
+series to the chart. In Figure \ref{fig:example-of-moving-averages}, 
+we add simple moving average to \code{cs}, the plot 
+object we created ealier. As you can see, MA is added
+to the price panel. Users can choose if they want to draw 
+MAs on a new panel by setting \code{overlay=FALSE} 
+for various moving averages. Multiple numbers of 
+periods to average over are also supported. In
+Figure \ref{fig:example-of-multi-periods}, we add 
+5-day SMA to 10-day SMA to \code{cs}.
+
+\subsection{Add built-in indicators}
+
+Users can also add technical indicators by specifying addTA 
+functions to \code{chartSeries}. In Figure 
+\ref{fig:call-indicators-from-chartseries}, we add bollinger 
+bands and relative strength index to the chart. As you can 
+see, because the functions will be called inside of \code{chartSeries} 
+by \code{eval()}, the specified TAs need to be in character. 
+You can use different symbols to separate the functions. In 
+this example, we use "semicolon" to divide \code{addRSI} 
+and \code{addBBands} functions so we must specify \code{TAsep} 
+with the corresponding symbol. Users can also specify a 
+character vector or list to TA: 
+\code{c("addRSI()", "addBBands()")} or 
+\code{list("addRSI()", "addBBands()")}. By doing so, 
+\code{sepTA} can be ignored.
+
+%
+\begin{figure}
+
+\caption{Call Indicators from chartSeries }
+
+\label{fig:call-indicators-from-chartseries}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(ttrc, TA=c("addRSI();addBBands()"), TAsep=";")
+cs
+@
+\end{figure}
+
+\subsection{Manage chart colors}
+
+%
+\begin{figure}
+
+\caption{Name of Themes and Color Palates}
+
+\label{fig:name-of-themes-and-color-palates}
+
+<<echo=T>>=
+theme.name <- names(.chart.theme)
+theme.name
+col.palates <- chartTheme(theme.name[2])
+names(col.palates)
+head(col.palates, n=6L)
+@
+\end{figure}
+
+Except for the various moving average indicators which can control 
+line colors by specifying \code{col}, users need to call \code{chartTheme}
+to do that. We have set up some specific color palattes designed 
+to create readable line and bar graphs with sepcific objectives in 
+\code{.chart.theme}. Figure \ref{fig:name-of-themes-and-color-palates} 
+shows an example of the existing theme names and the correspondent 
+color palates. As you can see, \code{col.palates} is a list with 
+several elements to set up chart colors and has \code{chart.theme} 
+class. Users can see parameters by entering \code{plotObject$Env$theme$<TA>$col}.
+
+\subsubsection*{theme}
+
+%
+\begin{figure}
+
+\caption{Candlesticks Chart with 'beige' Theme}
+
+\label{fig:candlesticks-chart-with-beige-themes}
+
+<<echo=T, fig=T, height=5>>=
+cs.beige <- chartSeries(ttrc, theme=chartTheme('beige'))
+cs.beige <- addBBands()
+cs.beige <- addRSI()
+cs.beige
+@
+\end{figure}
+
+Then we create candlesticks with specific theme name. There are 
+color settings for Bollinger Bands in some themes already. 
+Figure \ref{fig:candlesticks-chart-with-beige-themes} 
+shows candlesticks chart with Bollinger Bands, Relative Strength Index 
+and Moving Average Convergence Divergence Indicator under theme 'beige' 
+created by \code{chartTheme}. As you can see, the background color 
+turns into light yellow color. Both bands and the middle moving average 
+are in orange and green color, respectively.
+
+%
+\begin{figure}
+
+\caption{Example of Managing TA colors}
+
+\label{fig:example-of-managing-ta-colors}
+
+<<echo=T, fig=T, height=5>>=
+rsi.beige <- chartTheme('beige', 
+                        addRSI=list(col=list(rsi='red', dot='white')))
+cs.rsi.beige <- chartSeries(ttrc, theme=rsi.beige)
+cs.rsi.beige <- addBBands()
+cs.rsi.beige <- addRSI()
+cs.rsi.beige
+@
+\end{figure}
+
+Next we show how to set up custom colors for the technical indicators 
+added to the chart in Figure \ref{fig:example-of-managing-ta-colors}.
+To compare to the Figure \ref{fig:candlesticks-chart-with-beige-themes}, 
+we keep using theme 'beige' but change the color of RSI from blue to 
+red. \code{chartTheme} creates custom colors for TAs and follows the 
+following rules: 
+
+\begin{itemize}
+\item chartTheme(\ldots, add<TA.name>=list(col=list(\ldots)))
+\end{itemize}
+
+Whether \code{col} should be added or not depends on the columns 
+of TAs used. For example, Exponential Moving Average calculates 
+the ease of movement values (emv) and the smoothed emv. So 
+you should type:
+
+\begin{itemize}
+\item chartTheme(addEMV=list(col=list(emv, emvMA)))
+\end{itemize}
+
+Please type \code{demo(chartTheme)} to see the corresponding 
+color names of addTA functions and the demonstration of 
+\code{chartTheme} or type \code{help(chartTheme)} to get further 
+information.
+
+
+\subsection{Arrange technical indicators}
+
+Since there are many technical indicators from \pkg{TTR}, it may 
+be troublesome for users to replace an indicator with a new one 
+to apply to the current chart or swap the locations of existing 
+TAs. We provide users some functions to manipulate TAs directly 
+without calling \code{chartSeries}. In this section, we will 
+introduce the functions that allow users to see, drop and move TAs 
+on the current chart.
+
+%
+\begin{figure}
+
+\caption{Example of list TA}
+
+\label{fig:example-of-list-ta}
+
+<<echo=T,fig=T, height=5>>=
+cs <- chartSeries(ttrc, 
+                  TA=c("addVo();addMACD();addRSI();addBBands();
+                       addDEMA();addSMA()"), 
+                  TAsep=";")
+head(listTA(chob=cs), n=3L)
+cs
+@
+\end{figure}
+
+First we create a chart with volume and several indicators, MACD, 
+RSI, BBands, DEMA and SMA and show the existing TAs by \code{listTA} 
+in Figure \ref{fig:example-of-list-ta}. It returns a list of function 
+calls. To save spcae, we only show the first three elements.
+
+%
+\begin{figure}
+
+\caption{Example of TA Arrangement}
+
+\label{fig:example-of-ta-arrangement}
+
+<<echo=T,fig=T, height=5>>=
+# drop Bollinger Bands
+cs <- dropTA(ta="BBands")
+# swap frames of volume and macd
+cs <- swapTA(ta1="Vo", ta2="MACD", occ1=1, occ2=1)
+# move SMA to be behind of DEMA
+cs <- moveTA(ta="SMA", pos=1)
+cs
+@
+\end{figure}
+
+Then we perform the arrangements to the current chart in Figure 
+\ref{fig:example-of-ta-arrangement} and print the result.
+
+\subsection{Add lines, points and shading regime}
+
+%
+\begin{figure}
+
+\caption{Example of Series}
+
+\label{fig:example-of-series}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(ttrc)
+cs <- addLines(x=Lo(ttrc["1998-06::1999-01"]), col="red")
+cs
+@
+\end{figure}
+
+To add more than just technical indicators, users can add 
+series, points and shading area with \code{addLines}, 
+\code{addPoints} and \code{addShading}, respectively. We 
+show example of adding Low Price of \code{ttrc} to 
+the chart. As you can see in Figure \ref{fig:example-of-series}, 
+specified series will be added to the corresponding period. 
+Horizontal and vertical lines are also supported. 
+
+%
+\begin{figure}
+
+\caption{Example of Points}
+
+\label{fig:example-of-points}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(ttrc)
+# specify x with xts object
+cs <- addPoints(Lo(ttrc["2000"]))
+# specify both x and y, location and value, respectively
+cs <- addPoints(1:200, Cl(ttrc[1:200]), col="blue")
+# specify x with location, y=NULL
+cs <- addPoints(201:300, offset=1, col="pink")
+cs
+@
+\end{figure}
+
+As showed in Figure \ref{fig:example-of-points}, users can 
+add points with three ways depending on the value of \code{x} 
+and \code{y}. First, if a xts object is passed to \code{addPoints}, 
+it is similar to \code{addLines} but with points. The points will be
+added to the corresponding period automatically without specifying 
+locations. Second, with location specified to \code{x} and value to 
+\code{y}, the form is similar to \code{points} but \code{y} is required 
+to be a xts object. Third, when y is \code{NULL}, points will be added
+to the desired period. Relying on the value of \code{offset}, when it 
+is 1, Low Price of the series is drawn; when it is greater than 1, 
+High Price is drawn.
+
+%
+\begin{figure}
+
+\caption{Example of Shading Regime}
+
+\label{fig:example-of-shading-regime}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(ttrc)
+cs <- addShading("1998-06::1999-01", col=cs$Env$theme$BBands$col$fill)
+cs
+@
+\end{figure}
+
+To emphasize an event or a sudden drop in prce, we can 
+add shading regime to the desired period. In Figure 
+\ref{fig:example-of-shading-regime}, shading area is added 
+from August 2015 to September 2015 with the default fill 
+color of BBands in "black" theme.
+
+\subsection{Zoom chart}
+
+%
+\begin{figure}
+
+\caption{Example of zoomChart}
+
+\label{fig:example-of-zoomchart}
+
+<<echo=T, fig=T, height=5>>=
+cs <- chartSeries(ttrc, TA=c("addVo()", "addMACD()"))
+zoomChart("last 3 months")
+@
+\end{figure}
+
+As we mentioned in section Create charts, Figure \ref{fig:example-of-subset-series}, 
+to view a subset period of a long term series you have two choices: 
+\begin{enumerate}
+\item Specify a desired period to \code{subset} when \code{chartSeries} is called.
+\item Call \code{zoomChart} or \code{zooom} functions.
+\end{enumerate}
+
+Since we have introduced the first functionality earlier, 
+here we make a demonstration for \code{zoomChart}. 
+\code{zooom} is an interactive chart version of zoomChart which utilizes 
+the standard \R~ device interaction tool \code{locator} to estimate the 
+desired subset. This estimate is then passed to zoomChart for actual 
+redrawing. Because of its interactive functionality, we will not 
+give an example here but users can type \code{demo(zoom)} to get further 
+information.
+
+
+\code{zoomChart} allows not only a desired range of periods but a 
+statement which consists of three elements first/last, a number and 
+periodicity. You can also zoom back to full data by \code{zoomChart()} 
+as showed in Figure \ref{fig:example-of-zoomchart}.
+
+
+\section{Conclusion}
+With that short overview of a few of the capabilities provided by new 
+\pkg{quantmod}, we hope that the accompanying package and documentation 
+will make it easier for users to understand the new structure of quantmod. 
+If you think there's an important gap or possible improvement to be made, 
+please don't hesitate to contact us.
+
+
+\end{document}

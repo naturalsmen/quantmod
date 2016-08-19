@@ -64,7 +64,9 @@ chartTheme('white')
 chartTheme('white',up.col='blue',dn.col='red')
 
 # A TA example
-chartTheme(addRSI.col='red')
+# users can investigate the parameters by
+# plotObject$Env$theme$<TA> after add<TA> is called
+chartTheme(addRSI=list(col=list(rsi='red', dot="#BFCFFF")))
 
 str(chartTheme())
 }

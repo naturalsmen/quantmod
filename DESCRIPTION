@@ -1,17 +1,18 @@
 Package: quantmod
 Type: Package
 Title: Quantitative Financial Modelling Framework
-Version: 0.4-6
-Date: 2016-04-07
+Version: 0.4-7
+Date: 2016-08-19
 Authors@R: c(
   person(given=c("Jeffrey","A."), family="Ryan", role=c("aut","cph")),
   person(given=c("Joshua","M."), family="Ulrich", role=c("cre","ctb"), email="josh.m.ulrich@gmail.com"),
   person(given="Wouter", family="Thielen", role="ctb")
   )
-Depends: xts(>= 0.9-0), zoo, TTR(>= 0.2), methods
+Depends: xts(>= 0.10-0), zoo, TTR(>= 0.2), methods
 Suggests: DBI,RMySQL,RSQLite,timeSeries,its,XML,downloader
 Description: Specify, build, trade, and analyse quantitative financial trading strategies.
 LazyLoad: yes
 License: GPL-3
 URL: http://www.quantmod.com https://github.com/joshuaulrich/quantmod
 BugReports: https://github.com/joshuaulrich/quantmod/issues
+RoxygenNote: 5.0.1

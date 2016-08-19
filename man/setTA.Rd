@@ -6,21 +6,29 @@
 \description{
 Used to manage the TA arguments used inside \code{chartSeries}
 calls.
+
+\code{\link{setDefaults}}, \code{setTA} and \code{unsetTA} are not available 
+temporarily in this version. See details.
 }
 \usage{
 setTA(type = c("chartSeries", "barChart", "candleChart"))
 
-listTA(dev)
+listTA(chob)
 }
 \arguments{
   \item{type}{ the function to apply defaults TAs to }
-  \item{dev}{ the device to display TA arguments for }
+  \item{chob}{ the plot object created by \code{\link{chartSeries}} 
+  to display TA arguments for }
 }
 \details{
 \code{setTA} and \code{unsetTA} provide a simple
 way to reuse the same TA arguments for multiple
 charts.  By default all charting functions will be
 set to use the current chart's defaults.
+Since S4 method used by \code{\link{chartSeries}} 
+is deprecated in this version, \code{setTA} and 
+\code{unsetTA} uses S4 object, which should be 
+updated in the near future.
 
 It is important to note that the \emph{current} device
 will be used to extract the list of TA arguments to apply.

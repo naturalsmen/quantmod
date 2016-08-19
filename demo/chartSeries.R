@@ -8,7 +8,6 @@ chartSeries.demo <- function(x) {
   data <- as.xts(sample_matrix)
   cat("A simple xts object:\n")
   print(str(data))
-  
   cat("chartSeries(data)\n")
   chartSeries(data)
   readline("Press <Enter> to continue")

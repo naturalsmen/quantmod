@@ -5,6 +5,7 @@
 \alias{unsetDefaults}
 \title{ Manage Default Argument Values for quantmod Functions }
 \description{
+Not available. See Details.
 Use globally specified defaults, if set, in place of formally specified
 default argument values. Allows user to specify function defaults
 different than formally supplied values, e.g. to change poorly performing
@@ -55,6 +56,8 @@ importDefaults(calling.fun)
       will override the values set in the global default environment.
     }
   }
+  Since S4 method is no longer available, these functions should be 
+  refactored to integrate with replot_xts object in a near future.
 }
 \value{
   \item{setDefaults}{

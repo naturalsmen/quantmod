@@ -2,6 +2,8 @@
 \alias{saveChart}
 \title{ Save Chart to External File }
 \description{
+Not available. See Details. 
+
 Save selected chart to an external file.
 }
 \usage{
@@ -31,6 +33,9 @@ The caller may specify any parameters that are valid for the device called.
 Internally, effort is made to match the dimensions of the device being
 used to create the output file.  User supplied dimensions will override this
 internal calculation.
+
+Since S4 method is deprecated, \code{saveChart} is not available until 
+an update is implemented in the near future.
 }
 \value{
 A file in the current directory (default) matching the type of

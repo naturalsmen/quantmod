@@ -17,7 +17,7 @@
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Experimental Charting Version 2
+Experimental Charting Version 3
 }
 \description{
 These are experimental functions for a new version of chartSeries
@@ -65,7 +65,8 @@ additional parameters
 }
 \details{
 These functions, when complete, will revert back to the original chartSeries naming
-convention.
+convention. It is now a wrapper for \code{xts::plot.xts} and is called from 
+\code{\link{chartSeries}}.
 }
 \value{
 Called for graphical side effects.

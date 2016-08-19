@@ -14,6 +14,9 @@ future technical analysis additions. Possible chart
 styles include candles, matches (1 pixel candles), bars,
 and lines. Chart may have white or black background.
 
+It is now a wrapper for \code{\link{chart_Series}} to create 
+replot_xts object and S4 method is deprecated.
+
 \code{reChart} allows for dynamic changes to the chart without
 having to respecify the full chart parameters.
 }
@@ -58,7 +61,7 @@ reChart(type = c("auto", "candlesticks", "matchsticks", "bars","line"),
   \item{show.grid}{ display price grid lines? }
   \item{name}{ name of chart }
   \item{time.scale}{ what is the timescale? automatically deduced (broken) }
-  \item{log.scale}{ should the y-axis be log-scaled? }
+  \item{log.scale}{ should the y-axis be log-scaled? Not available. See Details.}
   \item{TA}{ a vector of technical indicators and params, or character strings }
   \item{TAsep}{ TA delimiter for TA strings }
   \item{line.type}{ type of line in line chart }
@@ -146,6 +149,10 @@ released technical analysis charting code.
 
 Many improvements in the current version were the result of conversations with
 Gabor Grothendieck.  Many thanks to him.
+
+Since \code{chartSeries} is now a wrapper for \code{chart_Series} and base 
+charting functions have been replaced by \code{xts::plot.xts}. log.scale is 
+not available until a better handling comes up.
 }
 \seealso{ \code{\link{getSymbols}}, \code{\link{addTA}}, \code{\link{setTA}},
           \code{\link{chartTheme}} }

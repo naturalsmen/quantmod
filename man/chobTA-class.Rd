@@ -4,7 +4,7 @@
 \alias{show,chobTA-method}
 
 \title{A Technical Analysis Chart Object }
-\description{ Internal storage class for handling arbitrary TA objects }
+\description{ Deprecated. Internal storage class for handling arbitrary TA objects }
 \section{Objects from the Class}{
 Objects of class \code{chobTA} are created and returned invisibly
 through calls to addTA-style functions.

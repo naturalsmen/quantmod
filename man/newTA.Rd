@@ -4,6 +4,8 @@
 \alias{chartTA}
 \title{ Create A New TA Indicator For chartSeries }
 \description{
+\code{newTA} is deprecated. See Detail.
+
 Functions to assist in the creation of indicators or
 content to be drawn on plots produced by chartSeries.
 }
@@ -79,6 +81,9 @@ to modify the resultant code to further change behavior.
 
 To create a new TA function with \code{newTA} certain arguments
 must be specified.
+
+Since S4 method is no longer available, \code{newTA} is 
+deprecated and will be removed in the future release.
 
 The \code{FUN} argument is a function symbol (or coercible to such)
 that is the primary filter to be used on the core-data of a chartSeries
@@ -160,9 +165,9 @@ chartSeries.
 to be added...
 }
 \value{
-\code{addTA} will invisibly return an S4 object of
-class \code{chobTA}. If this function is called
-interactively, the \code{chobTA} object will be
+\code{addTA} will invisibly return a replot_xts object of
+class \code{replot_xts}. If this function is called
+interactively, the \code{replot_xts} object will be
 evaluated and added to the current chart.
 
 \code{newTA} will return a function object that

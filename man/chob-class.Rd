@@ -3,7 +3,7 @@
 \alias{chob-class}
 
 \title{A Chart Object Class }
-\description{Internal Objects for Tracking and Plotting Chart Changes }
+\description{Deprecated. Internal Objects for Tracking and Plotting Chart Changes }
 \section{Objects from the Class}{
 Objects are created internally through the charting
 functions \code{chartSeries}, \code{barChart}, \code{lineChart}, and

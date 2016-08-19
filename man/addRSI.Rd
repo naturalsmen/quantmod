@@ -16,8 +16,8 @@ addRSI(n = 14, maType = "EMA", wilder = TRUE)
 see 'RSI' in \pkg{TTR} for specific details and references.
 }
 \value{
-An RSI indicator will be draw in a new window on the current
-chart.  A chobTA object will be returned silently.
+An RSI indicator will be draw in a new frame on the current
+chart.  A lchob object will be returned silently.
 }
 \references{ see RSI in \pkg{TTR} written by Josh Ulrich }
 \author{ Jeffrey A. Ryan }

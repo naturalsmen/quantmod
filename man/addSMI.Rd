@@ -18,8 +18,8 @@ addSMI(n=13,slow=25,fast=2,signal=9,ma.type="EMA")
 see 'SMI in \pkg{TTR} for specifics and references.
 }
 \value{
-An SMI indicator will be draw in a new window on the current
-chart.  A chobTA object will be returned silently.
+An SMI indicator will be draw in a new frame on the current
+chart.  A lchob object will be returned silently.
 }
 \references{ see SMI in \pkg{TTR} written by Josh Ulrich }
 \author{ Jeffrey A. Ryan }

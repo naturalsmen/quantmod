@@ -16,8 +16,8 @@ addROC(n = 1, type = c("discrete", "continuous"), col = "red")
 See 'ROC' in \pkg{TTR} for specific details and references.
 }
 \value{
-A ROC indicator will be draw in a new window on the current
-chart.  A chobTA object will be returned silently.
+A ROC indicator will be draw in a new frame on the current
+chart.  A lchob object will be returned silently.
 }
 \references{ see ROC in \pkg{TTR} written by Josh Ulrich }
 \author{Jeffrey A. Ryan }

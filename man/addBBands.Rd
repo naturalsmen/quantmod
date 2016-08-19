@@ -29,7 +29,7 @@ Bollinger Bands will be drawn, or scheduled to be drawn,
 on the current chart.  If \code{draw} is either percent or width
 a new figure will be added to the current TA figures charted.
 
-A chobTA object will be returned silently.
+A lchob object will be returned silently.
 }
 \references{ See bollingerBands in \pkg{TTR} written by Josh Ulrich }
 \author{ Jeffrey A. Ryan }

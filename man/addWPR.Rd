@@ -14,8 +14,8 @@ addWPR(n = 14)
 see 'WPR' in \pkg{TTR} for details and references.
 }
 \value{
-A William's percent R indicator will be draw in a new window on the current
-chart.  A chobTA object will be returned silently.
+A William's percent R indicator will be draw in a new frame on the current
+chart.  A lchob object will be returned silently.
 }
 \references{ see 'WPR' in \pkg{TTR} written by Josh Ulrich }
 \author{ Jeffrey A. Ryan }

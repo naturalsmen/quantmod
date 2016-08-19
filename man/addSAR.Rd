@@ -16,7 +16,7 @@ see 'SAR' in \pkg{TTR} for specific details and references.
 }
 \value{
 A SAR overlay will be drawn on the current
-chart.  A chobTA object will be returned silently.
+chart.  A lchob object will be returned silently.
 }
 \references{ see SAR in \pkg{TTR} written by Josh Ulrich }
 \author{ Jeffrey A. Ryan }

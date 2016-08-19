@@ -48,7 +48,7 @@ more details and references.
 }
 \value{
 A moving average indicator will be draw on the current
-chart.  A chobTA object will be returned silently.
+chart.  A lchob object will be returned silently.
 }
 \references{ see MovingAverages in \pkg{TTR} written by Josh Ulrich }
 \author{ Jeffrey A. Ryan }

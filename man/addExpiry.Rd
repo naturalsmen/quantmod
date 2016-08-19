@@ -18,7 +18,7 @@ for details and limitations.
 }
 \value{
 Expiration lines will be drawn at appropriate dates.
-A chibTA object will be returned silently.
+A lchob object will be returned silently.
 }
 \author{ Jeffrey A. Ryan }
 \seealso{ \code{\link{addTA}} }

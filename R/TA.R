@@ -107,7 +107,9 @@ function(ta, order=NULL, on=NA, legend='auto', yrange=NULL, ...) {
     lchob <- current.chob()
     ncalls <- length(lchob$Env$call_list)
     lchob$Env$call_list[[ncalls + 1]] <- match.call()
+    if(!hasArg(col)) lenv$col <- lchob$Env$theme$BBands$col$ma
     xdata <- lchob$Env$xdata
+    xsubset <- lchob$Env$xsubset
     nrc <- NROW(xdata)
   
     ta <- try.xts(ta, error=FALSE)

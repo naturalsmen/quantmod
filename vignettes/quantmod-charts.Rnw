@@ -22,7 +22,7 @@
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 
-\author {Joshua Ulrich \& ChuuHsiang Hung}
+\author {Joshua M. Ulrich \& ChuuHsiang Hung}
 
 \title{\pkg{quantmod} Charts Overview}
 % \plaintitle{quantmod Charts Overview}
